@@ -6,5 +6,6 @@ public class Main {
         System.out.println("Veuillez saisir le chemin de l'image :");
         String str = sc.nextLine();
         System.out.println("Vous avez saisi le chemin : " + str);
+        sc.close();
     }
 }
