@@ -1,5 +1,3 @@
-package launcher;
-
 import org.tensorflow.*;
 
 import java.io.IOException;
