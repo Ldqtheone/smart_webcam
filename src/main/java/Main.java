@@ -15,9 +15,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main extends Application {
+
+    File choosenImg = null;
 
     public static String recoveryLineCommand() {
         Scanner sc = new Scanner(System.in);
@@ -62,22 +65,18 @@ public class Main extends Application {
 
         ImageView imageView = new ImageView(); //Image for render
 
+
         openButton.setOnAction(
                 event -> {
-                    File file = fileImageChooser.createFileChooser().showSaveDialog(primaryStage);
-                    if(file != null)
-                        try {
-                            BufferedImage bufferedImage = ImageIO.read(file);
-                            ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + userInput.getText()+ ".jpg"));
-                        } catch (IOException ignored) {
-                        }
+                    this.choosenImg = fileImageChooser.createFileChooser().showSaveDialog(primaryStage);
                 }
         );
 
         // action event
         EventHandler<ActionEvent> event = (ActionEvent e) -> {
             //Set the user image
-            imageView.setImage(new Image(this.getClass().getResource("/tensorPics/" + userInput.getText()+ ".jpg").toString()));
+            //System.out.println(this.getClass().getResource("/tensorPics/" + userInput.getText()+ ".jpg").toString());
+            imageView.setImage(new Image("file:\\"+this.choosenImg.toString()));
             //get pathfile from user input
             Path pathfile = PathFunctions.createPathFile(userInput.getText());
             //Start analysis of the image
@@ -85,13 +84,19 @@ public class Main extends Application {
                 userInputPercent.setText("0");
             }
             //String[] tabLabelsUser = userInputDescription.getText().split(" ");
-            String[] resultTab = startAnalysis(userInput.getText());
+            String[] resultTab = startAnalysis(this.choosenImg.toString());
             labelResult.setText(resultTab[0]);
             System.out.println(resultTab[2]);
             //Check if the value are corresponding the wanted ones
             if( (Integer.parseInt(userInputPercent.getText()) <= Float.parseFloat(resultTab[2]))){
                 if(userInputDescription.getText().equals("") || (userInputDescription.getText().contains(resultTab[1])) ) {
-                    labelInputImg.setText("yup"); //En attendant la sauvegarde
+                    if(this.choosenImg != null) {
+                        try {
+                            BufferedImage bufferedImage = ImageIO.read(this.choosenImg);
+                            ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + userInput.getText() + ".jpg"));
+                        } catch (IOException ignored) {
+                        }
+                    }
                 }
                 else{
                     labelInputImg.setText("nop"); //En attendant la sauvegarde
@@ -135,9 +140,9 @@ public class Main extends Application {
         //String filename = args.toString();
 
         // path of File
-        Path pahFile = PathFunctions.createPathFile(args);
+        //Path pahFile = PathFunctions.createPathFile(args);
 
-        return imgDesc.imgtoByteArray(pahFile);
+        return imgDesc.imgtoByteArray(Paths.get(args));
         //return "";
     }
 
