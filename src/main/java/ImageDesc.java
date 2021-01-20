@@ -47,7 +47,8 @@ public class ImageDesc {
         System.out.printf("BEST MATCH: %s (%.2f%% likely)%n",
                 labels.get(bestLabelIdx),
                 probability[0][bestLabelIdx] * 100f);
-        return labels.get(bestLabelIdx);
+
+        return "BEST MATCH: " + labels.get(bestLabelIdx) + " (" + probability[0][bestLabelIdx] * 100f + "% likely)";
     }
 
     public String imgtoByteArray(Path pathFile){
