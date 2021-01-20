@@ -66,6 +66,7 @@ public class Main extends Application {
 
         webcamButton.setOnAction(
                 event -> {
+                    System.out.println("ici");
                     Webcam.webcam();
                 }
         );

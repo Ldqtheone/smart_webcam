@@ -24,52 +24,70 @@ import org.bytedeco.javacv.OpenCVFrameConverter.ToIplImage;
 
 public class Webcam {
 
-    static final int INTERVAL = 100;///you may use interval
-    static CanvasFrame canvas = new CanvasFrame("Web Cam");
+  //  static final int INTERVAL = 100;///you may use interval
+     CanvasFrame canvas = new CanvasFrame("Web Cam");
 
     public void Test() {
         canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
 
     public static void webcam() {
-
-        try {
+        System.out.println("la");
             OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
-            grabber.start();
+            try {
+                grabber.start();
+            }
+            catch (Exception e){
+
+            }
             //opencv_core.IplImage grabbedImage = grabber.grab();
 
            // OpenCVFrameConverter converter =  new OpenCVFrameConverter();
             //converter.convert(grabber.grab());
+        IplImage grabbedImage = null;
             OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
+            try {
+               grabbedImage = converter.convert(grabber.grab());
+            }catch (Exception e){
 
-            IplImage grabbedImage = converter.convert(grabber.grab());
-
+            }
 
             CanvasFrame canvasFrame = new CanvasFrame("Video with JavaCV");
             canvasFrame.setCanvasSize(grabbedImage.width(), grabbedImage.height());
             grabber.setFrameRate(grabber.getFrameRate());
 
-            FFmpegFrameRecorder recorder = new FFmpegFrameRecorder("mytestvideo.mp4", grabber.getImageWidth(), grabber.getImageHeight());
+         /*   FFmpegFrameRecorder recorder = new FFmpegFrameRecorder("mytestvideo.mp4", grabber.getImageWidth(), grabber.getImageHeight());
             recorder.setFormat("mp4");
             recorder.setFrameRate(30);
             recorder.setVideoBitrate(10 * 1024 * 1024);
+*/
+            try {
+             //   recorder.start();
+            }
+            catch (Exception e) {
 
-
-            recorder.start();
+            }
             Frame grabbedImage1;
+            System.out.println("la");
+            try {
             while (canvasFrame.isVisible() && (grabbedImage1 = grabber.grab()) != null) {
                 canvasFrame.showImage(grabbedImage1);
-                recorder.record(grabbedImage1);
-            }
-            recorder.stop();
-            grabber.stop();
-            canvasFrame.dispose();
+               /* try {
+                    recorder.record(grabbedImage1);
+                }
+                catch (Exception e) {
 
-        } catch (FrameGrabber.Exception ex) {
-            Logger.getLogger(JCVdemo.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FrameRecorder.Exception ex) {
-            Logger.getLogger(JCVdemo.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                }*/
+            }}catch (Exception e) {
+
+            }
+            try {
+              //  recorder.stop();
+                grabber.stop();
+            }
+            catch (Exception e) {
+                canvasFrame.dispose();
+            }
 
       /*  OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
         grabber.start();
