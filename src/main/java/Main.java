@@ -65,7 +65,7 @@ public class Main extends Application {
             //get pathfile from user input
             Path pathfile = createPathFile(userInput.getText());
             //Start analysis of the image
-            imageAnalysis(pathfile);
+            labelResult.setText(imageAnalysis(pathfile));
         };
         // when enter is pressed
         userInput.setOnAction(event);
