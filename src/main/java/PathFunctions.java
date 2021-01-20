@@ -26,7 +26,7 @@ public class PathFunctions {
 
     public static Path getPicturePath() {
         Path currentWorkingDir = Paths.get("").toAbsolutePath();
-        String file = currentWorkingDir + "/src/main/resources/tensorPics";
+        String file = currentWorkingDir + "/src/main/resources";
         return Paths.get(file);
     }
 }

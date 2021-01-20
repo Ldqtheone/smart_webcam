@@ -93,7 +93,7 @@ public class Main extends Application {
                     if(this.choosenImg != null) {
                         try {
                             BufferedImage bufferedImage = ImageIO.read(this.choosenImg);
-                            ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + userInput.getText() + ".jpg"));
+                            ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + userInputFolder.getText() + "/" + userInput.getText() + ".jpg"));
                         } catch (IOException ignored) {
                         }
                     }
