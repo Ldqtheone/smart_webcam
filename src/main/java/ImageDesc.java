@@ -1,9 +1,11 @@
 import org.tensorflow.Tensor;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageDesc {
@@ -36,7 +38,7 @@ public class ImageDesc {
         return best;
     }
 
-    private String checkProbability(byte[] modelByte,Tensor input){
+    private String[] checkProbability(byte[] modelByte,Tensor input){
         Tensor model = utils.executeModelFromByteArray(modelByte, input);
         float[][] probability = new float[1][(int) model.shape()[1]];
 
@@ -48,10 +50,12 @@ public class ImageDesc {
                 labels.get(bestLabelIdx),
                 probability[0][bestLabelIdx] * 100f);
 
-        return "BEST MATCH: " + labels.get(bestLabelIdx) + " (" + probability[0][bestLabelIdx] * 100f + "% likely)";
+        //String[] result =
+
+        return new String[]{"BEST MATCH: " + labels.get(bestLabelIdx) + " (" + probability[0][bestLabelIdx] * 100f + "% likely)", labels.get(bestLabelIdx), Float.toString(probability[0][bestLabelIdx] * 100f)};
     }
 
-    public String imgtoByteArray(Path pathFile){
+    public String[] imgtoByteArray(Path pathFile){
         // convert picture in a byte
         byte[] tabByte = null;
 
@@ -79,7 +83,7 @@ public class ImageDesc {
 
             }
         }
-        return "";
+        return new String[]{"no match","",""};
     }
 
 
