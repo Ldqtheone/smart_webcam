@@ -62,12 +62,13 @@ public class Main extends Application {
             if(!userInputPercent.getText().matches("\\d+")) {
                 userInputPercent.setText("0");
             }
+            //String[] tabLabelsUser = userInputDescription.getText().split(" ");
             String[] resultTab = startAnalysis(userInput.getText());
             labelResult.setText(resultTab[0]);
             System.out.println(resultTab[2]);
             //Check if the value are corresponding the wanted ones
             if( (Integer.parseInt(userInputPercent.getText()) <= Float.parseFloat(resultTab[2]))){
-                if(userInputDescription.getText().equals("") || (userInputDescription.getText().equals(resultTab[1])) ) {
+                if(userInputDescription.getText().equals("") || (userInputDescription.getText().contains(resultTab[1])) ) {
                     labelInputImg.setText("yup"); //En attendant la sauvegarde
                 }
                 else{
