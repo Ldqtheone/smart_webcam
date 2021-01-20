@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
 
+
 public class Main extends Application {
 
     public static String recoveryLineCommand() {
@@ -59,8 +60,15 @@ public class Main extends Application {
         Label labelResult = new Label("No result"); //Label for the futur result
 
         Button openButton = new Button("Enregistrer une image...");
+        Button webcamButton = new Button("Démarrer un webcam");
 
         ImageView imageView = new ImageView(); //Image for render
+
+        webcamButton.setOnAction(
+                event -> {
+                    Webcam.webcam();
+                }
+        );
 
         openButton.setOnAction(
                 event -> {
@@ -123,6 +131,7 @@ public class Main extends Application {
         root.getChildren().add(labelResult);
         root.getChildren().add(imageView);
         root.getChildren().add(openButton);
+        root.getChildren().add(webcamButton);
         primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.show();
 
