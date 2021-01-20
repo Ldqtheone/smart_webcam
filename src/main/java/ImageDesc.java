@@ -26,7 +26,7 @@ public class ImageDesc {
         return null;
     }
 
-    public static int maxIndex(float[][] probabilities) {
+    private int maxIndex(float[][] probabilities) {
         int best = 0;
         for (int i = 1; i < probabilities[0].length; ++i) {
             if (probabilities[0][i] > probabilities[0][best]) {
@@ -34,6 +34,19 @@ public class ImageDesc {
             }
         }
         return best;
+    }
+
+    private void checkProbability(byte[] modelByte,Tensor input){
+        Tensor model = utils.executeModelFromByteArray(modelByte, input);
+        float[][] probability = new float[1][(int) model.shape()[1]];
+
+        model.copyTo(probability);
+
+        int bestLabelIdx = this.maxIndex(probability);
+
+        System.out.printf("BEST MATCH: %s (%.2f%% likely)%n",
+                labels.get(bestLabelIdx),
+                probability[0][bestLabelIdx] * 100f);
     }
 
     public void imgtoByteArray(Path pathFile){
@@ -60,16 +73,7 @@ public class ImageDesc {
             }
 
             if(modelByte != null){
-                Tensor model = utils.executeModelFromByteArray(modelByte, input);
-                float[][] probability = new float[1][(int) model.shape()[1]];
-
-                model.copyTo(probability);
-
-                int bestLabelIdx = maxIndex(probability);
-
-                System.out.printf("BEST MATCH: %s (%.2f%% likely)%n",
-                        labels.get(bestLabelIdx),
-                        probability[0][bestLabelIdx] * 100f);
+                this.checkProbability(modelByte, input);
             }
         }
     }
