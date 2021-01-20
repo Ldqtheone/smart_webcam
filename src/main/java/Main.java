@@ -1,5 +1,4 @@
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -13,7 +12,6 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -56,17 +54,14 @@ public class Main extends Application {
         ImageView imageView = new ImageView(); //Image for render
 
         openButton.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        File file = fileImageChooser.createFileChooser().showSaveDialog(primaryStage);
-                        if(file != null)
-                            try {
-                                BufferedImage bufferedImage = ImageIO.read(file);
-                                ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + userInput.getText()+ ".jpg"));
-                            } catch (IOException ignored) {
-                            }
-                    }
+                event -> {
+                    File file = fileImageChooser.createFileChooser().showSaveDialog(primaryStage);
+                    if(file != null)
+                        try {
+                            BufferedImage bufferedImage = ImageIO.read(file);
+                            ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + userInput.getText()+ ".jpg"));
+                        } catch (IOException ignored) {
+                        }
                 }
         );
 
