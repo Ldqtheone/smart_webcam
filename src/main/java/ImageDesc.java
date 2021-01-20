@@ -36,7 +36,7 @@ public class ImageDesc {
         return best;
     }
 
-    private void checkProbability(byte[] modelByte,Tensor input){
+    private String checkProbability(byte[] modelByte,Tensor input){
         Tensor model = utils.executeModelFromByteArray(modelByte, input);
         float[][] probability = new float[1][(int) model.shape()[1]];
 
@@ -47,9 +47,10 @@ public class ImageDesc {
         System.out.printf("BEST MATCH: %s (%.2f%% likely)%n",
                 labels.get(bestLabelIdx),
                 probability[0][bestLabelIdx] * 100f);
+        return labels.get(bestLabelIdx);
     }
 
-    public void imgtoByteArray(Path pathFile){
+    public String imgtoByteArray(Path pathFile){
         // convert picture in a byte
         byte[] tabByte = null;
 
@@ -73,9 +74,11 @@ public class ImageDesc {
             }
 
             if(modelByte != null){
-                this.checkProbability(modelByte, input);
+                return this.checkProbability(modelByte, input);
+
             }
         }
+        return "";
     }
 
 

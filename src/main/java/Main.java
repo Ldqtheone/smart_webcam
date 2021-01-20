@@ -14,30 +14,20 @@ import org.tensorflow.Tensor;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
     public static String recoveryLineCommand() {
-        //Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         System.out.println("Veuillez saisir le chemin de l'image :");
-        String filename = "jack.png";
-        //sc.close();
+        String filename = sc.nextLine();
+        sc.close();
         return filename;
     }
 
-    public static void main2(String[] args) {
-        TFUtils utils = new TFUtils();
-
-        // recovery line in the shell
-        String filename = recoveryLineCommand();
-
-        // path of File
-        Path pahFile = PathFunctions.createPathFile(filename);
-
-        imgDesc.imgtoByteArray(pahFile);
+    public static void main(String[] args) {
+        launch(args);
     }
 
     @Override
@@ -61,11 +51,11 @@ public class Main extends Application {
         // action event
         EventHandler<ActionEvent> event = (ActionEvent e) -> {
             //Set the user image
-            imageView.setImage(new Image(this.getClass().getResource("/tensorPics/"+userInput.getText()).toString()));
+            imageView.setImage(new Image(this.getClass().getResource("/tensorPics/" + userInput.getText()+ ".jpg").toString()));
             //get pathfile from user input
-            Path pathfile = createPathFile(userInput.getText());
+            Path pathfile = PathFunctions.createPathFile(userInput.getText());
             //Start analysis of the image
-            labelResult.setText(imageAnalysis(pathfile));
+            labelResult.setText(startAnalysis(userInput.getText()));
         };
         // when enter is pressed
         userInput.setOnAction(event);
@@ -82,4 +72,18 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.show();
     }
+
+    public static String startAnalysis(String args) {
+        ImageDesc imgDesc = new ImageDesc();
+
+        // recovery line in the shell
+        //String filename = args.toString();
+
+        // path of File
+        Path pahFile = PathFunctions.createPathFile(args);
+
+        return imgDesc.imgtoByteArray(pahFile);
+        //return "";
+    }
+
 }
