@@ -12,6 +12,10 @@ public class JavaFxImageFileChooser {
         this.createFileChooser();
     }
 
+    /**
+     * Class custom FileChooser
+     * @return fileChooser
+     */
     public FileChooser createFileChooser(){
         FileChooser fileChooser = new FileChooser();
         configuringFileChooser(fileChooser);
@@ -19,6 +23,10 @@ public class JavaFxImageFileChooser {
         return fileChooser;
     }
 
+    /**
+     * Configure FileChooser and assign only Jpg extension
+     * @param fileChooser
+     */
     private void configuringFileChooser(FileChooser fileChooser) {
         // Set title for FileChooser
         fileChooser.setTitle("Select Pictures");
@@ -32,6 +40,10 @@ public class JavaFxImageFileChooser {
         );//
     }
 
+    /**
+     * Open selected img
+     * @param file
+     */
     public void openFile(File file) {
         try {
             desktop.open(file);

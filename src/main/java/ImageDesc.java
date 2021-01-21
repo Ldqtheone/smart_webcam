@@ -11,11 +11,19 @@ public class ImageDesc {
     TFUtils utils;
     List<String> labels;
 
+    /**
+     * Class Image Description
+     */
     public ImageDesc(){
         utils = new TFUtils();
         labels = readAllLinesOrExit(PathFunctions.getLabelsPath());
     }
 
+    /**
+     * Read all line of selected file
+     * @param path
+     * @return List<String>
+     */
     public static List<String> readAllLinesOrExit(Path path) {
         try {
             return Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -26,6 +34,11 @@ public class ImageDesc {
         return null;
     }
 
+    /**
+     * Loop for searching the max index of the List
+     * @param probabilities
+     * @return integer
+     */
     private int maxIndex(float[][] probabilities) {
         int best = 0;
         for (int i = 1; i < probabilities[0].length; ++i) {
@@ -36,6 +49,12 @@ public class ImageDesc {
         return best;
     }
 
+    /**
+     * Check the probability of the tensor converted in Float[]
+     * @param modelByte
+     * @param input
+     * @return description of best match
+     */
     private String[] checkProbability(byte[] modelByte,Tensor input){
         Tensor model = utils.executeModelFromByteArray(modelByte, input);
         float[][] probability = new float[1][(int) model.shape()[1]];
@@ -53,6 +72,11 @@ public class ImageDesc {
         return new String[]{"BEST MATCH: " + labels.get(bestLabelIdx) + " (" + probability[0][bestLabelIdx] * 100f + "% likely)", labels.get(bestLabelIdx), Float.toString(probability[0][bestLabelIdx] * 100f)};
     }
 
+    /**
+     * Convert Img and Model file to Tab Byte
+     * @param pathFile
+     * @return
+     */
     public String[] imgtoByteArray(Path pathFile){
         // convert picture in a byte
         byte[] tabByte = null;

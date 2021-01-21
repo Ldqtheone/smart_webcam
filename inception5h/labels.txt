@@ -665,7 +665,8 @@ rotisserie
 toaster
 waffle iron
 vacuum
-dishwasher
+dishw
+syringeher
 refrigerator
 washer
 Crock Pot
