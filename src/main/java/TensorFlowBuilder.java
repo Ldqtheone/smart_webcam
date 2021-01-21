@@ -1,9 +1,13 @@
+import javafx.collections.FXCollections;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
@@ -37,18 +41,23 @@ public class TensorFlowBuilder {
     private Label labelFolder;
     private Label labelPercent;
     private Label labelResult;
+    private Label labelFilter;
 
     /**
      * Buttons
      */
     private Button openButton;
     private Button submitButton;
+    private ChoiceBox choiceFilter;
 
 
     public TensorFlowBuilder(Stage primaryStage){
         this.primaryStage = primaryStage;
     }
 
+    /**
+     * Create the JavaFX window
+     */
     private void createWindow(){
         //Create the window
         this.primaryStage.setTitle("SmartCam 1.0");
@@ -65,15 +74,22 @@ public class TensorFlowBuilder {
         this.labelFolder = new Label("Destination folder");
         this.labelPercent = new Label("Wanted percentage");
         this.labelResult = new Label("No result"); //Label for the futur result
+        this.labelFilter = new Label("Select a filter");
 
         this.openButton = new Button("Comparer une image...");
         this.submitButton = new Button("Lancer la comparaison");
+        this.choiceFilter = new ChoiceBox(FXCollections.observableArrayList(
+                "Orange" , "Vert", "Bleu", "Rose", " Gris"
+        ));
 
         this.imageView = new ImageView(); //Image for render
 
         this.startActionsButton();
     }
 
+    /**
+     * Start event with press selected button
+     */
     private void startActionsButton(){
 
         this.openButton.setOnAction(
@@ -85,11 +101,19 @@ public class TensorFlowBuilder {
         // action event
         this.submitButton.setOnAction(
                 event -> {
-                    //Set the user image
-                    this.imageView.setImage(new Image("file:\\"+this.choosenImg.toString()));
 
-                    //get pathfile from user input
-                    Path pathfile = PathFunctions.createPathFile(this.userInput.getText());
+                    if(this.choiceFilter.getValue() != null) {
+                        try {
+                            Filters.filterColor(this.choosenImg.toString(), this.choiceFilter.getValue().toString());
+                            this.choosenImg = new File(this.choosenImg.toString().replace(".jpg", "_filter.jpg"));
+                        } catch (FilterException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //Set the user image
+                    System.out.println(this.choosenImg.toString());
+                    this.imageView.setImage(new Image("file:\\"+this.choosenImg.toString()));
 
                     //Start analysis of the image
                     if(!this.userInputPercent.getText().matches("\\d+")) {
@@ -104,6 +128,7 @@ public class TensorFlowBuilder {
                     if( (Integer.parseInt(this.userInputPercent.getText()) <= Float.parseFloat(resultTab[2]))){
                         if(this.userInputDescription.getText().equals("") || (this.userInputDescription.getText().contains(resultTab[1])) ) {
                             if(this.choosenImg != null) {
+
                                 try {
                                     BufferedImage bufferedImage = ImageIO.read(this.choosenImg);
                                     ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + this.userInputFolder.getText() + "/" + this.userInput.getText() + ".jpg"));
@@ -124,11 +149,15 @@ public class TensorFlowBuilder {
         this.finalizeWindow();
     }
 
+    /**
+     * Add all components to root
+     */
     private void finalizeWindow(){
         this.imageView.setFitHeight(100);
         this.imageView.setFitWidth(100);
 
         TilePane root = new TilePane();
+        //StackPane stackPane = new StackPane();
 
         // add elements
         root.getChildren().add(this.labelInputImg);
@@ -141,6 +170,8 @@ public class TensorFlowBuilder {
         root.getChildren().add(this.userInputFolder);
         root.getChildren().add(this.labelResult);
         root.getChildren().add(this.imageView);
+        root.getChildren().add(this.labelFilter);
+        root.getChildren().add(this.choiceFilter);
         root.getChildren().add(this.openButton);
         root.getChildren().add(this.submitButton);
         this.primaryStage.setScene(new Scene(root, 600, 600));
@@ -163,6 +194,7 @@ public class TensorFlowBuilder {
 
         return imgDesc.imgtoByteArray(Paths.get(args));
     }
+
 
     public void launchProgram(){
         this.createWindow();
