@@ -1,12 +1,15 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
@@ -16,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class Main extends Application {
@@ -35,6 +40,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        TilePane root = new TilePane();
         //Create the window
         primaryStage.setTitle("SmartCam 1.0");
 
@@ -66,8 +72,39 @@ public class Main extends Application {
 
         webcamButton.setOnAction(
                 event -> {
-                    System.out.println("ici");
-                    Webcam.webcam();
+                    Stage windowCam = new Stage();
+                    windowCam.setTitle("Cam");
+
+                   // TilePane cam = new TilePane();
+                    Group cam = new Group();
+                 //   Scene scene = new Scene(cam, 600, 600);
+
+                    //Label cam = new Label("I'm a Label on new Window");
+
+                 //   StackPane secondaryLayout = new StackPane();
+                 //   root.getChildren().add(cam);
+
+
+                    // new Timer().scheduleAtFixedRate(new TimerTask(){
+
+
+                   //         Platform.runLater(() -> {
+
+                        cam.getChildren().clear();
+                        ImageView res = Webcam.webcam(windowCam);
+                        cam.getChildren().add(res);
+
+                        windowCam.show();
+                        System.out.println("function");
+                       
+
+                     //   });
+
+                    windowCam.setScene(new Scene(cam, 600, 600));
+                       // }
+                  //  },0,10);
+
+
                 }
         );
 
@@ -118,7 +155,7 @@ public class Main extends Application {
         imageView.setFitHeight(100);
         imageView.setFitWidth(100);
 
-        TilePane root = new TilePane();
+
         //root.getChildren().add(btn);
         // add elements
         root.getChildren().add(labelInputImg);
