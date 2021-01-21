@@ -15,14 +15,27 @@ public class Filters {
      */
     public static void filterColor(String imagePath, String colorValue) throws FilterException {
 
-        int colorFilter = switch (colorValue) {
-            case "Orange" -> Imgproc.COLORMAP_HOT;
-            case "Vert" -> Imgproc.COLORMAP_SUMMER;
-            case "Bleu" -> Imgproc.COLORMAP_WINTER;
-            case "Rose" -> Imgproc.COLORMAP_SPRING;
-            case "Gris" -> Imgproc.COLORMAP_BONE;
-            default -> 0;
-        };
+        int colorFilter;
+        switch (colorValue) {
+            case "Orange":
+                colorFilter = Imgproc.COLORMAP_HOT;
+                break;
+            case "Vert":
+                colorFilter = Imgproc.COLORMAP_SUMMER;
+                break;
+            case "Bleu":
+                colorFilter = Imgproc.COLORMAP_WINTER;
+                break;
+            case "Rose":
+                colorFilter = Imgproc.COLORMAP_SPRING;
+                break;
+            case "Gris":
+                colorFilter = Imgproc.COLORMAP_BONE;
+                break;
+            default:
+                colorFilter = 0;
+                break;
+        }
 
         Mat image = imread(imagePath);
         if (image == null)
