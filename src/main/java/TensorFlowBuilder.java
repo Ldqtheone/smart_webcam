@@ -49,6 +49,7 @@ public class TensorFlowBuilder {
     private Button openButton;
     private Button submitButton;
     private ChoiceBox choiceFilter;
+    private Button frameFilter;
 
 
     public TensorFlowBuilder(Stage primaryStage){
@@ -81,6 +82,7 @@ public class TensorFlowBuilder {
         this.choiceFilter = new ChoiceBox(FXCollections.observableArrayList(
                 "Orange" , "Vert", "Bleu", "Rose", " Gris"
         ));
+        this.frameFilter = new Button("Ajouter un cadre");
 
         this.imageView = new ImageView(); //Image for render
 
@@ -91,6 +93,24 @@ public class TensorFlowBuilder {
      * Start event with press selected button
      */
     private void startActionsButton(){
+
+        this.frameFilter.setOnAction(
+                event -> {
+                    if(this.choosenImg != null) {
+                        try {
+                            Filters.frameFilter(this.choosenImg.toString());
+                            System.out.println("3 : " + this.choosenImg);
+                            this.choosenImg = new File(this.choosenImg.toString().replace(".jpg", "_frame.png"));
+                            System.out.println("4 : " + this.choosenImg);
+                        } catch (FilterException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else{
+                        System.out.println("Aucune image n'a été séléctionnée");
+                    }
+                }
+        );
 
         this.openButton.setOnAction(
                 event -> {
@@ -131,7 +151,8 @@ public class TensorFlowBuilder {
 
                                 try {
                                     BufferedImage bufferedImage = ImageIO.read(this.choosenImg);
-                                    ImageIO.write(bufferedImage, "jpg", new File(PathFunctions.getPicturePath() + "/" + this.userInputFolder.getText() + "/" + this.userInput.getText() + ".jpg"));
+                                    String format = this.choosenImg.toString().matches(".jpg") ? "jpg" : "png";
+                                    ImageIO.write(bufferedImage, format, new File(PathFunctions.getPicturePath() + "/" + this.userInputFolder.getText() + "/" + this.userInput.getText() + "." + format));
                                 } catch (IOException ignored) {
                                 }
                             }
@@ -172,6 +193,7 @@ public class TensorFlowBuilder {
         root.getChildren().add(this.imageView);
         root.getChildren().add(this.labelFilter);
         root.getChildren().add(this.choiceFilter);
+        root.getChildren().add(this.frameFilter);
         root.getChildren().add(this.openButton);
         root.getChildren().add(this.submitButton);
         this.primaryStage.setScene(new Scene(root, 600, 600));

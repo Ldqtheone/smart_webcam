@@ -1,7 +1,16 @@
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.global.opencv_imgcodecs.*;
 import org.bytedeco.opencv.opencv_core.Mat;
+import org.opencv.core.Core;
 import org.opencv.imgproc.Imgproc;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to apply filter
@@ -44,18 +53,37 @@ public class Filters {
         applyColorMap(image, image, colorFilter);
         String newPath = imagePath.replace(".jpg", "_filter.jpg");
         imwrite(newPath, image);
+
     }
 
     /**
      * Method to apply zeteam filter
      * @throws FilterException return exception if image not found
      */
-    /*public static void frameFilter() throws FilterException {
-        Mat background = imread('field.jpg');
-        Mat overlay = imread('dice.png');
+    public static void frameFilter(String imgToFilter) throws FilterException, IOException {
 
-        Mat added_image = overlayImage(background,0.4,overlay,0.1,0);
+        BufferedImage image = ImageIO.read(new File(imgToFilter));
+        BufferedImage overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/cadreTransparent.png"));
 
-        imwrite('combined.jpg', added_image);
-    }*/
+        // create the new image, canvas size is the max. of both image sizes
+        int w = Math.max(image.getWidth(), overlay.getWidth());
+        int h = Math.max(image.getHeight(), overlay.getHeight());
+        BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        // paint both images, preserving the alpha channels
+        Graphics g = combined.getGraphics();
+        g.drawImage(image, (overlay.getWidth() / 2) - (image.getWidth() / 2), (overlay.getHeight() / 2) - (image.getHeight() / 2), null);
+        g.drawImage(overlay, 0, 0, null);
+
+        g.dispose();
+
+        // Save as new image
+        System.out.println("1 : " + imgToFilter);
+
+        String newPath = imgToFilter.replace(".jpg", "_frame.png");
+
+        System.out.println("2 : " + newPath);
+
+        ImageIO.write(combined, "PNG", new File(newPath));
+    }
 }
