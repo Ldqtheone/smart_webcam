@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import org.bytedeco.javacv.FrameGrabber;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -72,39 +73,11 @@ public class Main extends Application {
 
         webcamButton.setOnAction(
                 event -> {
-                    Stage windowCam = new Stage();
-                    windowCam.setTitle("Cam");
-
-                   // TilePane cam = new TilePane();
-                    Group cam = new Group();
-                 //   Scene scene = new Scene(cam, 600, 600);
-
-                    //Label cam = new Label("I'm a Label on new Window");
-
-                 //   StackPane secondaryLayout = new StackPane();
-                 //   root.getChildren().add(cam);
-
-
-                    // new Timer().scheduleAtFixedRate(new TimerTask(){
-
-
-                   //         Platform.runLater(() -> {
-
-                        cam.getChildren().clear();
-                        ImageView res = Webcam.webcam(windowCam);
-                        cam.getChildren().add(res);
-
-                        windowCam.show();
-                        System.out.println("function");
-                       
-
-                     //   });
-
-                    windowCam.setScene(new Scene(cam, 600, 600));
-                       // }
-                  //  },0,10);
-
-
+                    try {
+                        new Webcam();
+                    } catch (FrameGrabber.Exception e) {
+                        e.printStackTrace();
+                    }
                 }
         );
 

@@ -1,197 +1,218 @@
 
-import java.nio.ByteBuffer;
-
-import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.*;
+
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.bytedeco.javacv.OpenCVFrameGrabber;
 import org.bytedeco.javacv.*;
-import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.IplImage;
-
-import static org.bytedeco.opencv.global.opencv_core.cvFlip;
-import static org.bytedeco.opencv.helper.opencv_imgcodecs.cvSaveImage;
-
-import org.bytedeco.javacv.OpenCVFrameConverter;
+import org.tensorflow.Tensor;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.Executors;
 
-import org.bytedeco.opencv.opencv_core.Mat;
-
-import static org.opencv.imgproc.Imgproc.COLOR_BGR2BGRA;
-
-public abstract class Webcam  extends Application {
-
-    static ImageView videoView = new ImageView();
-
-    static OpenCVFrameConverter<Mat> javaCVConv = new OpenCVFrameConverter.ToMat();
-    static Mat javaCVMat = new Mat();
-    static ByteBuffer buffer;
-    static WritablePixelFormat<ByteBuffer> formatByte = PixelFormat.getByteBgraPreInstance();
-
-   public static ImageView webcam(Stage primary)  {
-        OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
-        try {
-            grabber.start();
-        } catch (Exception e) {
-            System.out.println("grabber problem");
-        }
-        System.out.println("commence treatment");
-        IplImage grabbedImage = null;
-        OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
-        try {
-            grabbedImage = converter.convert(grabber.grab());
-        } catch (Exception e) {
-            System.out.println("problem of conversion image");
-        }
-        System.out.println(grabbedImage);
+import static java.lang.Float.parseFloat;
+import static org.bytedeco.opencv.helper.opencv_imgcodecs.cvSaveImage;
 
 
-        Frame grabbedImage1;
+public class Webcam extends VBox {
 
-        try {
-            grabbedImage1 = grabber.grab();
-            System.out.println(grabbedImage1);
-            Java2DFrameConverter converterBuff = new Java2DFrameConverter();
-            BufferedImage bufferedImage = converterBuff.convert(grabbedImage1);
-            System.out.println(bufferedImage);
-               /* try {
-                    ImageIO.write(bufferedImage, "jpg", new File(Paths.get("").toAbsolutePath() + "/build/ressources/main/tensorPics/test.jpg"));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }*/
+    static TFUtils utils = new TFUtils();
+    Java2DFrameConverter java2DFrameConverter = new Java2DFrameConverter();
+    static boolean bool = true;
 
-            int w = grabbedImage1.imageWidth;
-            int h = grabbedImage1.imageHeight;
-
-            Mat mat = javaCVConv.convert(grabbedImage1);
-            opencv_imgproc.cvtColor(mat, javaCVMat, COLOR_BGR2BGRA);
-            if (buffer == null) {
-                buffer = javaCVMat.createBuffer();
-            }
-            System.out.println(buffer);
-            PixelBuffer<ByteBuffer> pb = new PixelBuffer<ByteBuffer>(w, h, buffer, formatByte);
-            final WritableImage wi = new WritableImage(pb);
-            videoView = new ImageView(wi);
-            return videoView;
-            /*TilePane cam = new TilePane();
-            primary.setScene(new Scene(cam, 600, 600));
-            primary.show();*/
-
-            /*Platform.runLater(() -> videoView.setImage(wi));
-            videoView.setImage(wi);
-            System.out.println("la");
-            System.out.println(wi);*/
-            //return videoView;
-               /* WritableImage writableImage = new WritableImage(600, 600);
-                WritableImage writableImageBuff = SwingFXUtils.toFXImage(bufferedImage, writableImage);*/
-
-                /*while ((grabbedImage1 = grabber.grab()) != null) {
-
-
-                }*/
-        } catch (Exception e) {
-            System.out.println("problem of display image");
-        }
-        try {
-            grabber.stop();
-            ;
-        } catch (Exception e) {
-            System.out.println("problem stop");
-        }
-        return null;
+    private void exitButtonOnAction(ActionEvent event){
+        ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
     }
 
-    /*@Override
-    public void start(Stage primaryStage) throws Exception {
-        System.out.println("dans start");
+    public Webcam() throws FrameGrabber.Exception {
         OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
-        try {
-            grabber.start();
-        } catch (Exception e) {
-            System.out.println("grabber problem");
-        }
-        System.out.println("commence treatment");
-        IplImage grabbedImage = null;
         OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
-        try {
-            grabbedImage = converter.convert(grabber.grab());
-        } catch (Exception e) {
-            System.out.println("problem of conversion image");
-        }
-        System.out.println(grabbedImage);
+        grabber.start();
+        ImageView imageView = new ImageView();
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(600);
+        imageView.setFitWidth(600);
+        Label label = new Label();
+
+        bool = true;
+      //////////////
+        Stage stage = new Stage();
+        Button exitButton = new Button("sortir du mode camera");
+        stage.setTitle("cam");
+        Group root = new Group();
+        StackPane bottomPane = new StackPane();
 
 
-        Frame grabbedImage1;
 
-        try {
-            grabbedImage1 = grabber.grab();
-            System.out.println(grabbedImage1);
-            Java2DFrameConverter converterBuff = new Java2DFrameConverter();
-            BufferedImage bufferedImage = converterBuff.convert(grabbedImage1);
-            System.out.println(bufferedImage);
-               *//* try {
-                    ImageIO.write(bufferedImage, "jpg", new File(Paths.get("").toAbsolutePath() + "/build/ressources/main/tensorPics/test.jpg"));
+
+
+
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            byte[] barr = null;
+            IplImage img = null;
+            Timer time = new Timer(); // Instantiate Timer Object
+            ScheduledClassify scheduledTask;
+            scheduledTask = null;
+            if (bool == true)
+                scheduledTask = new ScheduledClassify(barr, img);
+            time.schedule(scheduledTask, 3000, 3000);
+            while (bool == true) {
+                Frame frame = null;
+                try {
+                    frame = grabber.grabFrame();
+                    img = converter.convert(frame);
+                    barr = TFUtils.iplImageToByteArray(img);
+                    scheduledTask.setParam(barr);
+                    scheduledTask.setImg(img);
+                    ScheduledClassify finalScheduledTask = scheduledTask;
+                    Platform.runLater(() -> {
+                        label.setText(String.format("BEST MATCH: %s %.2f%% likely%n", finalScheduledTask.getResultLabel(), finalScheduledTask.getResultPercent()));
+                    });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }*//*
+                    e.printStackTrace();
+                }
 
-            int w = grabbedImage1.imageWidth;
-            int h = grabbedImage1.imageHeight;
-
-            Mat mat = javaCVConv.convert(grabbedImage1);
-            opencv_imgproc.cvtColor(mat, javaCVMat, COLOR_BGR2BGRA);
-            if (buffer == null) {
-                buffer = javaCVMat.createBuffer();
+                imageView.setImage(frameToImage(frame));
+                imageView.setVisible(true);
+                stage.setWidth(600);
+                stage.setHeight(600);
             }
-            System.out.println(buffer);
-            PixelBuffer<ByteBuffer> pb = new PixelBuffer<ByteBuffer>(w, h, buffer, formatByte);
-            final WritableImage wi = new WritableImage(pb);
-            videoView = new ImageView(wi);
-            Platform.runLater(() -> videoView.setImage(wi));
-            videoView.setImage(wi);
-            System.out.println("la");
-            System.out.println(wi);
-               *//* WritableImage writableImage = new WritableImage(600, 600);
-                WritableImage writableImageBuff = SwingFXUtils.toFXImage(bufferedImage, writableImage);*//*
+        });
 
-                *//*while ((grabbedImage1 = grabber.grab()) != null) {
+        root.getChildren().add(imageView);
+
+        label.setPadding(new Insets(500, 200, 50, 200));
+
+        root.getChildren().addAll(label);
+        root.getChildren().add(exitButton);
+
+        exitButton.setOnAction(
+                event -> {
+                    try {
+                        grabber.stop();
+                        bool = false;
+                        System.out.println("exit");
+                        exitButtonOnAction(event);
+                    } catch (FrameGrabber.Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+        Scene scene = new Scene(root);
+        stage.sizeToScene();
+        stage.setScene(scene);
+        stage.show();
+
+    }
 
 
-                }*//*
+    private WritableImage frameToImage(Frame frame) {
+        BufferedImage bufferedImage = java2DFrameConverter.getBufferedImage(frame);
+        return SwingFXUtils.toFXImage(bufferedImage, null);
+    }
 
-            Group root = new Group();
-            Scene scene = new Scene(root);
-            scene.setFill(Color.BLACK);
-            HBox box = new HBox();
+    public static class ScheduledClassify extends TimerTask {
+        private IplImage img;
+        byte[] param;
+        private float resultPercent;
+        private String resultLabel;
 
-            root.getChildren().add(box);
 
-            primaryStage.setTitle("ImageView");
-            primaryStage.setWidth(415);
-            primaryStage.setHeight(200);
-            primaryStage.setScene(scene);
-            primaryStage.sizeToScene();
-            primaryStage.show();
-
-        } catch (Exception e) {
-            System.out.println("problem of display image");
+        public ScheduledClassify(byte[] param, IplImage img) {
+            this.param = param;
+            this.resultLabel = "";
+            this.resultPercent = 0.0f;
+            this.img = img;
         }
-        try {
-            grabber.stop();
-            ;
-        } catch (Exception e) {
-            System.out.println("problem stop");
-        }
-    }*/
 
-    public static void main(String[] args) {
-        Application.launch(args);
+        public ArrayList<Object> fluxWebcam(byte[] modelByte) {
+            Path modelPath = PathFunctions.getLabelsPath();
+            List<String> labels = ImageDesc.readAllLinesOrExit(modelPath);
+            //System.out.println(ImageDesc.imgtoByteArray(modelPath));
+            byte[] graphDef = null;
+            try {
+                graphDef = Files.readAllBytes(PathFunctions.getModelPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+           // try (Tensor image = utils.byteBufferToTensor(graphDef)) {
+            try (Tensor image = utils.byteBufferToTensor(modelByte)) {
+                System.out.println(graphDef);
+                String[] resProbability = null;
+                if (bool == true)
+                resProbability = ImageDesc.checkProbability(graphDef, image);
+//                String[] resProbability = ImageDesc.checkProbability(modelByte, image);
+                ArrayList<Object> result = new ArrayList<>();
+/*
+
+                String tab = resProbability.split(":")[1];
+                String[] tabLabel = tab.split("\\(");
+                String label = tabLabel[0];
+                String tabPourcentage = tabLabel[1].split("\\)")[0];
+*/
+
+                result.add(resProbability[1]);
+                float res = parseFloat(resProbability[2]);
+                result.add(res);
+               /* float[] labelProbabilities = executeClassify(graphDef, image);
+                int bestLabelIdx = utils.bestMatch(labelProbabilities);
+                ArrayList<Object> result = new ArrayList<>();
+                result.add(labels.get(bestLabelIdx));
+                result.add(labelProbabilities[bestLabelIdx] * 100f);*/
+                return result;
+            }
+        }
+
+        @Override
+        public void run() {
+            if (param != null) {
+                ArrayList<Object> result = fluxWebcam(param);
+                Date date = new Date();
+                Instant instant = date.toInstant();
+                resultLabel = (String) result.get(0);
+                resultPercent = (float) result.get(1);
+                System.out.println(resultPercent);
+                cvSaveImage(PathFunctions.getPicturePath() + resultLabel + instant + ".png", img);
+            }
+        }
+
+        public float getResultPercent() {
+            return resultPercent;
+        }
+
+        public String getResultLabel() {
+            return resultLabel;
+        }
+
+        public void setParam(byte[] param) {
+            this.param = param;
+        }
+
+        public void setImg(IplImage img) {
+            this.img = img;
+        }
     }
 }
+
+
+

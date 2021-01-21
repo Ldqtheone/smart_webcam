@@ -10,12 +10,12 @@ import java.util.List;
 
 public class ImageDesc {
 
-    TFUtils utils;
-    List<String> labels;
+    static TFUtils utils = new TFUtils();
+    static List<String> labels = readAllLinesOrExit(PathFunctions.getLabelsPath());
 
     public ImageDesc(){
-        utils = new TFUtils();
-        labels = readAllLinesOrExit(PathFunctions.getLabelsPath());
+        //utils = new TFUtils();
+       // labels = readAllLinesOrExit(PathFunctions.getLabelsPath());
     }
 
     public static List<String> readAllLinesOrExit(Path path) {
@@ -28,7 +28,7 @@ public class ImageDesc {
         return null;
     }
 
-    private int maxIndex(float[][] probabilities) {
+    public static int maxIndex(float[][] probabilities) {
         int best = 0;
         for (int i = 1; i < probabilities[0].length; ++i) {
             if (probabilities[0][i] > probabilities[0][best]) {
@@ -38,13 +38,13 @@ public class ImageDesc {
         return best;
     }
 
-    private String[] checkProbability(byte[] modelByte,Tensor input){
+    public static String[] checkProbability(byte[] modelByte, Tensor input){
         Tensor model = utils.executeModelFromByteArray(modelByte, input);
         float[][] probability = new float[1][(int) model.shape()[1]];
 
         model.copyTo(probability);
 
-        int bestLabelIdx = this.maxIndex(probability);
+        int bestLabelIdx = maxIndex(probability);
 
         System.out.printf("BEST MATCH: %s (%.2f%% likely)%n",
                 labels.get(bestLabelIdx),
@@ -55,7 +55,7 @@ public class ImageDesc {
         return new String[]{"BEST MATCH: " + labels.get(bestLabelIdx) + " (" + probability[0][bestLabelIdx] * 100f + "% likely)", labels.get(bestLabelIdx), Float.toString(probability[0][bestLabelIdx] * 100f)};
     }
 
-    public String[] imgtoByteArray(Path pathFile){
+    public static String[] imgtoByteArray(Path pathFile){
         // convert picture in a byte
         byte[] tabByte = null;
 
@@ -79,7 +79,7 @@ public class ImageDesc {
             }
 
             if(modelByte != null){
-                return this.checkProbability(modelByte, input);
+                return checkProbability(modelByte, input);
 
             }
         }
