@@ -1,8 +1,5 @@
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main extends Application {
