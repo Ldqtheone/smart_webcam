@@ -86,4 +86,31 @@ public class Filters {
 
         ImageIO.write(combined, "PNG", new File(newPath));
     }
+
+    public static void tamponFilter(String imgToFilter) throws FilterException, IOException{
+
+        BufferedImage image = ImageIO.read(new File(imgToFilter));
+        BufferedImage overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/cadreTransparent.png"));
+
+        // create the new image, canvas size is the max. of both image sizes
+        int w = Math.max(image.getWidth(), overlay.getWidth());
+        int h = Math.max(image.getHeight(), overlay.getHeight());
+        BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        // paint both images, preserving the alpha channels
+        Graphics g = combined.getGraphics();
+        g.drawImage(image, (overlay.getWidth() / 2) - (image.getWidth() / 2), (overlay.getHeight() / 2) - (image.getHeight() / 2), null);
+        g.drawImage(overlay, 0, 0, null);
+
+        g.dispose();
+
+        // Save as new image
+        System.out.println("1 : " + imgToFilter);
+
+        String newPath = imgToFilter.replace(".jpg", "_frame.png");
+
+        System.out.println("2 : " + newPath);
+
+        ImageIO.write(combined, "PNG", new File(newPath));
+    }
 }

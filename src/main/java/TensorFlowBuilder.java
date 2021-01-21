@@ -94,6 +94,7 @@ public class TensorFlowBuilder {
      */
     private void startActionsButton(){
 
+        /** J'appuie sur le choix du cadre */
         this.frameFilter.setOnAction(
                 event -> {
                     if(this.choosenImg != null) {
@@ -112,13 +113,14 @@ public class TensorFlowBuilder {
                 }
         );
 
+        /** J'ouvre le finder */
         this.openButton.setOnAction(
                 event -> {
                     this.choosenImg = fileImageChooser.createFileChooser().showSaveDialog(this.primaryStage);
                 }
         );
 
-        // action event
+       /** J'envoie mon formulaire et l'image */
         this.submitButton.setOnAction(
                 event -> {
 
@@ -148,7 +150,6 @@ public class TensorFlowBuilder {
                     if( (Integer.parseInt(this.userInputPercent.getText()) <= Float.parseFloat(resultTab[2]))){
                         if(this.userInputDescription.getText().equals("") || (this.userInputDescription.getText().contains(resultTab[1])) ) {
                             if(this.choosenImg != null) {
-
                                 try {
                                     BufferedImage bufferedImage = ImageIO.read(this.choosenImg);
                                     String format = this.choosenImg.toString().matches(".jpg") ? "jpg" : "png";
@@ -178,7 +179,6 @@ public class TensorFlowBuilder {
         this.imageView.setFitWidth(100);
 
         TilePane root = new TilePane();
-        //StackPane stackPane = new StackPane();
 
         // add elements
         root.getChildren().add(this.labelInputImg);
@@ -207,13 +207,6 @@ public class TensorFlowBuilder {
      */
     private static String[] startAnalysis(String args) {
         ImageDesc imgDesc = new ImageDesc();
-
-        //recovery line in the shell
-        //String filename = args.toString();
-
-        //path of File
-        //Path pahFile = PathFunctions.createPathFile(args);
-
         return imgDesc.imgtoByteArray(Paths.get(args));
     }
 
