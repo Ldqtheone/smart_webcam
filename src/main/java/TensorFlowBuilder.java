@@ -156,7 +156,7 @@ public class TensorFlowBuilder {
                             if(this.choosenStamp == null){
                                 overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/stamp.png"));
                             }else {
-                                overlay = overlay = ImageIO.read(new File(this.choosenStamp.toString()));
+                                overlay = ImageIO.read(new File(this.choosenStamp.toString()));
                             }
 
                             Filters.stampFilter(this.choosenImg.toString(), overlay, Integer.parseInt(this.userInputX.getText()), Integer.parseInt(this.userInputY.getText()));

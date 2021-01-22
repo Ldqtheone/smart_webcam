@@ -106,7 +106,6 @@ public class Filters {
     public static void stampFilter(String imgToFilter, BufferedImage overlay, int xUser, int yUser) throws FilterException, IOException{
 
         BufferedImage image = ImageIO.read(new File(imgToFilter));
-        //BufferedImage overlay = choosenStampp;
 
         // create the new image, canvas size is the max. of both image sizes
         int w = Math.max(image.getWidth(), overlay.getWidth());
