@@ -1,7 +1,6 @@
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.global.opencv_imgcodecs.*;
 import org.bytedeco.opencv.opencv_core.Mat;
-import org.opencv.core.Core;
 import org.opencv.imgproc.Imgproc;
 
 import javax.imageio.ImageIO;
@@ -9,8 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class to apply filter

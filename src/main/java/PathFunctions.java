@@ -33,7 +33,6 @@ public class PathFunctions {
     public static Path createPathFile(String filename) {
         Path currentWorkingDir = Paths.get("").toAbsolutePath();
         String file = currentWorkingDir + "/src/main/resources/tensorPics/" + filename + ".jpg";
-        //String file = currentWorkingDir + "/src/main/resources/tensorPics/" + filename;
         return Paths.get(file);
     }
 
