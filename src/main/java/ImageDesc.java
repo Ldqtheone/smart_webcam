@@ -15,8 +15,6 @@ public class ImageDesc {
      * Class Image Description
      */
     public ImageDesc(){
-        //utils = new TFUtils();
-       // labels = readAllLinesOrExit(PathFunctions.getLabelsPath());
     }
 
     /**
@@ -55,7 +53,7 @@ public class ImageDesc {
      * @param input
      * @return description of best match
      */
-    private static String[] checkProbability(byte[] modelByte,Tensor input){
+    public static String[] checkProbability(byte[] modelByte,Tensor input){
         Tensor model = utils.executeModelFromByteArray(modelByte, input);
         float[][] probability = new float[1][(int) model.shape()[1]];
 
@@ -67,8 +65,6 @@ public class ImageDesc {
                 labels.get(bestLabelIdx),
                 probability[0][bestLabelIdx] * 100f);
 
-        //String[] result =
-
         return new String[]{"BEST MATCH: " + labels.get(bestLabelIdx) + " (" + probability[0][bestLabelIdx] * 100f + "% likely)", labels.get(bestLabelIdx), Float.toString(probability[0][bestLabelIdx] * 100f)};
     }
 
@@ -77,7 +73,7 @@ public class ImageDesc {
      * @param pathFile
      * @return
      */
-    public static String[] imgtoByteArray(Path pathFile){
+    public String[] imgtoByteArray(Path pathFile){
         // convert picture in a byte
         byte[] tabByte = null;
 

@@ -3,7 +3,6 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,8 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.bytedeco.javacv.*;
 import org.bytedeco.opencv.opencv_core.IplImage;
@@ -22,7 +19,6 @@ import org.tensorflow.Tensor;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
@@ -60,12 +56,6 @@ public class Webcam extends VBox {
         stage.setTitle("cam");
         Group root = new Group();
         StackPane bottomPane = new StackPane();
-
-
-
-
-
-
 
         Executors.newSingleThreadExecutor().execute(() -> {
             byte[] barr = null;
@@ -125,7 +115,6 @@ public class Webcam extends VBox {
 
     }
 
-
     private WritableImage frameToImage(Frame frame) {
         BufferedImage bufferedImage = java2DFrameConverter.getBufferedImage(frame);
         return SwingFXUtils.toFXImage(bufferedImage, null);
@@ -148,37 +137,22 @@ public class Webcam extends VBox {
         public ArrayList<Object> fluxWebcam(byte[] modelByte) {
             Path modelPath = PathFunctions.getLabelsPath();
             List<String> labels = ImageDesc.readAllLinesOrExit(modelPath);
-            //System.out.println(ImageDesc.imgtoByteArray(modelPath));
             byte[] graphDef = null;
             try {
                 graphDef = Files.readAllBytes(PathFunctions.getModelPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-           // try (Tensor image = utils.byteBufferToTensor(graphDef)) {
             try (Tensor image = utils.byteBufferToTensor(modelByte)) {
                 System.out.println(graphDef);
                 String[] resProbability = null;
                 if (bool == true)
                 resProbability = ImageDesc.checkProbability(graphDef, image);
-//                String[] resProbability = ImageDesc.checkProbability(modelByte, image);
                 ArrayList<Object> result = new ArrayList<>();
-/*
-
-                String tab = resProbability.split(":")[1];
-                String[] tabLabel = tab.split("\\(");
-                String label = tabLabel[0];
-                String tabPourcentage = tabLabel[1].split("\\)")[0];
-*/
 
                 result.add(resProbability[1]);
                 float res = parseFloat(resProbability[2]);
                 result.add(res);
-               /* float[] labelProbabilities = executeClassify(graphDef, image);
-                int bestLabelIdx = utils.bestMatch(labelProbabilities);
-                ArrayList<Object> result = new ArrayList<>();
-                result.add(labels.get(bestLabelIdx));
-                result.add(labelProbabilities[bestLabelIdx] * 100f);*/
                 return result;
             }
         }

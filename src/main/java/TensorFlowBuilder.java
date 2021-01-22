@@ -111,9 +111,7 @@ public class TensorFlowBuilder {
                     if(this.choosenImg != null) {
                         try {
                             Filters.frameFilter(this.choosenImg.toString());
-                            System.out.println("3 : " + this.choosenImg);
                             this.choosenImg = new File(this.choosenImg.toString().replace(".jpg", "_frame.png"));
-                            System.out.println("4 : " + this.choosenImg);
                         } catch (FilterException | IOException e) {
                             e.printStackTrace();
                         }

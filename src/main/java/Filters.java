@@ -78,11 +78,7 @@ public class Filters {
         g.dispose();
 
         // Save as new image
-        System.out.println("1 : " + imgToFilter);
-
         String newPath = imgToFilter.replace(".jpg", "_frame.png");
-
-        System.out.println("2 : " + newPath);
 
         ImageIO.write(combined, "PNG", new File(newPath));
     }
