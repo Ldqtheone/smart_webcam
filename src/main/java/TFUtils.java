@@ -1,11 +1,32 @@
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.OpenCVFrameConverter;
+import org.bytedeco.opencv.opencv_core.IplImage;
 import org.tensorflow.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class TFUtils {
+
+    public static byte[] iplImageToByteArray(IplImage img) throws IOException {
+        BufferedImage im = new Java2DFrameConverter().convert(new OpenCVFrameConverter.ToIplImage().convert(img));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] barr = null;
+        try {
+            ImageIO.write(im, "jpg", baos);
+            baos.flush();
+            barr = baos.toByteArray();
+        } finally {
+            baos.close();
+        }
+        return barr;
+    }
 
     Tensor executeSavedModel(String modelFolderPath, Tensor input) {
         try {

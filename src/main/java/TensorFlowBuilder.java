@@ -1,5 +1,4 @@
 import javafx.collections.FXCollections;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -7,15 +6,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import org.bytedeco.javacv.FrameGrabber;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class TensorFlowBuilder {
@@ -50,6 +48,7 @@ public class TensorFlowBuilder {
     private Button submitButton;
     private ChoiceBox choiceFilter;
     private Button frameFilter;
+    private Button webcamButton;
 
 
     public TensorFlowBuilder(Stage primaryStage){
@@ -79,6 +78,7 @@ public class TensorFlowBuilder {
 
         this.openButton = new Button("Comparer une image...");
         this.submitButton = new Button("Lancer la comparaison");
+        this.webcamButton = new Button("Démarrer un webcam");
         this.choiceFilter = new ChoiceBox(FXCollections.observableArrayList(
                 "Orange" , "Vert", "Bleu", "Rose", " Gris"
         ));
@@ -93,6 +93,17 @@ public class TensorFlowBuilder {
      * Start event with press selected button
      */
     private void startActionsButton(){
+
+        /** J'appuie sur le bouton de ma caméra */
+        this.webcamButton.setOnAction(
+                event -> {
+                    try {
+                        new Webcam();
+                    } catch (FrameGrabber.Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
 
         /** J'appuie sur le choix du cadre */
         this.frameFilter.setOnAction(
@@ -196,6 +207,7 @@ public class TensorFlowBuilder {
         root.getChildren().add(this.frameFilter);
         root.getChildren().add(this.openButton);
         root.getChildren().add(this.submitButton);
+        root.getChildren().add(this.webcamButton);
         this.primaryStage.setScene(new Scene(root, 600, 600));
         this.primaryStage.show();
     }

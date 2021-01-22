@@ -2,6 +2,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import java.util.Scanner;
 
+
+
 public class Main extends Application {
 
     /**
@@ -27,7 +29,6 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         TensorFlowBuilder tensorFlowBuilder = new TensorFlowBuilder(primaryStage);
         tensorFlowBuilder.launchProgram();
     }
