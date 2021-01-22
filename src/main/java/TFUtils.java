@@ -28,6 +28,12 @@ public class TFUtils {
         return barr;
     }
 
+    /**
+     * Execute Saved Model
+     * @param modelFolderPath
+     * @param input
+     * @return
+     */
     Tensor executeSavedModel(String modelFolderPath, Tensor input) {
         try {
             Path path = Paths.get(ClassLoader.getSystemClassLoader().getResource(modelFolderPath).toURI()).toAbsolutePath();
@@ -41,6 +47,12 @@ public class TFUtils {
         }
     }
 
+    /**
+     * Execute Model from Byte Model Array
+     * @param graphDef
+     * @param input
+     * @return
+     */
     Tensor executeModelFromByteArray(byte[] graphDef, Tensor input) {
         try (Graph g = new Graph()) {
             g.importGraphDef(graphDef);

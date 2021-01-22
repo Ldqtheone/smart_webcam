@@ -34,10 +34,18 @@ public class Webcam extends VBox {
     Java2DFrameConverter java2DFrameConverter = new Java2DFrameConverter();
     static boolean bool = true;
 
+    /**
+     * Exit windows
+     * @param event
+     */
     private void exitButtonOnAction(ActionEvent event){
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
     }
 
+    /**
+     * Class Webcam
+     * @throws FrameGrabber.Exception
+     */
     public Webcam() throws FrameGrabber.Exception {
         OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
         OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
@@ -64,8 +72,9 @@ public class Webcam extends VBox {
             if (bool)
                 scheduledTask = new ScheduledClassify(barr, img);
             time.schedule(scheduledTask, 3000, 3000);
+            Frame frame = null;
+
             while (bool) {
-                Frame frame = null;
                 try {
                     grabber.start();
                     frame = grabber.grabFrame();
@@ -114,6 +123,11 @@ public class Webcam extends VBox {
 
     }
 
+    /**
+     * Convert frame to Img
+     * @param frame
+     * @return
+     */
     private WritableImage frameToImage(Frame frame) {
         BufferedImage bufferedImage = java2DFrameConverter.getBufferedImage(frame);
         return SwingFXUtils.toFXImage(bufferedImage, null);
@@ -135,6 +149,11 @@ public class Webcam extends VBox {
             this.imageDesc = new ImageDesc();
         }
 
+        /**
+         * Get the webcam flux
+         * @param modelByte
+         * @return
+         */
         public ArrayList<Object> fluxWebcam(byte[] modelByte) {
             Path modelPath = PathFunctions.getLabelsPath();
             List<String> labels = ImageDesc.readAllLinesOrExit(modelPath);
@@ -146,7 +165,7 @@ public class Webcam extends VBox {
             }
             try (Tensor image = utils.byteBufferToTensor(modelByte)) {
                 System.out.println(graphDef);
-                String[] resProbability = null;
+                String[] resProbability;
 
                 if (bool) {
                     resProbability = this.imageDesc.checkProbability(graphDef, image);
@@ -164,7 +183,7 @@ public class Webcam extends VBox {
 
         @Override
         public void run() {
-            if (param != null && bool == true) {
+            if (param != null && bool) {
                 ArrayList<Object> result = fluxWebcam(param);
                 if (result != null) {
                     Date date = new Date();
@@ -173,7 +192,7 @@ public class Webcam extends VBox {
                     resultPercent = (float) result.get(1);
                     System.out.println(resultLabel);
                     System.out.println(instant);
-                    cvSaveImage(PathFunctions.getPicturePath() + resultLabel + instant + ".jpg", img);
+                    cvSaveImage(PathFunctions.getPicturePath() + "/camera/" + resultLabel + instant + ".jpg", img);
                 }
             }
         }
