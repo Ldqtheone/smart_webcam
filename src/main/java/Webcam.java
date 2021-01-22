@@ -42,7 +42,7 @@ public class Webcam extends VBox {
     public Webcam() throws FrameGrabber.Exception {
         OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
         OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
-        grabber.start();
+
         ImageView imageView = new ImageView();
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(600);
@@ -69,6 +69,7 @@ public class Webcam extends VBox {
             while (bool == true) {
                 Frame frame = null;
                 try {
+                    grabber.start();
                     frame = grabber.grabFrame();
                     img = converter.convert(frame);
                     barr = TFUtils.iplImageToByteArray(img);
@@ -146,15 +147,17 @@ public class Webcam extends VBox {
             try (Tensor image = utils.byteBufferToTensor(modelByte)) {
                 System.out.println(graphDef);
                 String[] resProbability = null;
-                if (bool == true)
-                resProbability = ImageDesc.checkProbability(graphDef, image);
-                ArrayList<Object> result = new ArrayList<>();
+                if (bool == true) {
+                    resProbability = ImageDesc.checkProbability(graphDef, image);
+                    ArrayList<Object> result = new ArrayList<>();
 
-                result.add(resProbability[1]);
-                float res = parseFloat(resProbability[2]);
-                result.add(res);
-                return result;
+                    result.add(resProbability[1]);
+                    float res = parseFloat(resProbability[2]);
+                    result.add(res);
+                    return result;
+                }
             }
+            return null;
         }
 
         @Override
@@ -165,8 +168,9 @@ public class Webcam extends VBox {
                 Instant instant = date.toInstant();
                 resultLabel = (String) result.get(0);
                 resultPercent = (float) result.get(1);
-                System.out.println(resultPercent);
-                cvSaveImage(PathFunctions.getPicturePath() + resultLabel + instant + ".png", img);
+                System.out.println(resultLabel);
+                System.out.println(instant);
+                cvSaveImage(PathFunctions.getPicturePath() + resultLabel + instant + ".jpg", img);
             }
         }
 
