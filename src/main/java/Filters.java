@@ -53,12 +53,13 @@ public class Filters {
         applyColorMap(image, image, colorFilter);
         String newPath = imagePath.replace(".jpg", "_filter.jpg");
         imwrite(newPath, image);
-
     }
 
     /**
-     * Method to apply zeteam filter
-     * @throws FilterException return exception if image not found
+     * Method to add Frame filter
+     * @param imgToFilter
+     * @throws FilterException
+     * @throws IOException
      */
     public static void frameFilter(String imgToFilter) throws FilterException, IOException {
 
@@ -78,13 +79,31 @@ public class Filters {
         g.dispose();
 
         // Save as new image
-        String newPath = imgToFilter.replace(".jpg", ".png");
-        newPath = imgToFilter.replace(".png", "_frame.png");
+        System.out.println(imgToFilter);
+
+        String newPath = imgToFilter;
+
+        try {
+            newPath = newPath.replace(".jpg", "_frame.png");
+            newPath = newPath.replace("_stamp.png", "_stamp_frame.png");
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        System.out.println(newPath);
 
         ImageIO.write(combined, "PNG", new File(newPath));
     }
 
-    public static void stampFilter(String imgToFilter, int xUser, int yUser) throws FilterException, IOException{
+    /**
+     * Method to add Stamp filter
+     * @param imgToFilter
+     * @param xUser
+     * @param yUser
+     * @throws FilterException
+     * @throws IOException
+     */
+    public static void stampFilter(String imgToFilter, int xUser, int yUser) throws FilterException, IOException {
 
         BufferedImage image = ImageIO.read(new File(imgToFilter));
         BufferedImage overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/stamp.png"));
@@ -102,13 +121,19 @@ public class Filters {
         g.dispose();
 
         // Save as new image
-        System.out.println("1 : " + imgToFilter);
+        System.out.println(imgToFilter);
 
-        String newPath = imgToFilter.replace(".jpg", ".png");
-        newPath = imgToFilter.replace(".png", "_stamp.png");
+        String newPath = imgToFilter;
 
+        try {
+            newPath = newPath.replace(".jpg", "_stamp.png");
+            newPath = newPath.replace("_frame.png", "_stamp_frame.png");
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
-        System.out.println("2 : " + newPath);
+        System.out.println(newPath);
+
 
         ImageIO.write(combined, "PNG", new File(newPath));
     }

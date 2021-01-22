@@ -123,9 +123,13 @@ public class TensorFlowBuilder {
                         try {
                             Filters.frameFilter(this.choosenImg.toString());
                             this.choosenImg = new File(this.choosenImg.toString().replace(".jpg", "_frame.png"));
+                            this.choosenImg = new File(this.choosenImg.toString().replace("_stamp.png", "_stamp_frame.png"));
                         } catch (FilterException | IOException e) {
                             e.printStackTrace();
                         }
+
+                        this.imageView.setImage(new Image("file:\\"+this.choosenImg.toString()));
+
                     }
                     else{
                         System.out.println("Aucune image n'a été séléctionnée");
@@ -146,9 +150,13 @@ public class TensorFlowBuilder {
                             }
                             Filters.stampFilter(this.choosenImg.toString(), Integer.parseInt(this.userInputX.getText()), Integer.parseInt(this.userInputY.getText()));
                             this.choosenImg = new File(this.choosenImg.toString().replace(".jpg", "_stamp.png"));
+                            this.choosenImg = new File(this.choosenImg.toString().replace("_frame.png", "_stamp_frame.png"));
                         } catch (FilterException | IOException e) {
                             e.printStackTrace();
                         }
+
+                        this.imageView.setImage(new Image("file:\\"+this.choosenImg.toString()));
+
                     }
                     else{
                         System.out.println("Aucune image n'a été séléctionnée");
@@ -162,6 +170,7 @@ public class TensorFlowBuilder {
         this.openButton.setOnAction(
                 event -> {
                     this.choosenImg = fileImageChooser.createFileChooser().showSaveDialog(this.primaryStage);
+                    this.imageView.setImage(new Image("file:\\"+this.choosenImg.toString()));
                 }
         );
 
@@ -176,6 +185,7 @@ public class TensorFlowBuilder {
                         } catch (FilterException e) {
                             e.printStackTrace();
                         }
+
                     }
 
                     //Set the user image
