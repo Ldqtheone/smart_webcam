@@ -1,4 +1,3 @@
-
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -50,12 +49,11 @@ public class Webcam extends VBox {
         Label label = new Label();
 
         bool = true;
-      //////////////
+
         Stage stage = new Stage();
         Button exitButton = new Button("sortir du mode camera");
         stage.setTitle("cam");
         Group root = new Group();
-        StackPane bottomPane = new StackPane();
 
         Executors.newSingleThreadExecutor().execute(() -> {
             byte[] barr = null;
@@ -63,10 +61,10 @@ public class Webcam extends VBox {
             Timer time = new Timer(); // Instantiate Timer Object
             ScheduledClassify scheduledTask;
             scheduledTask = null;
-            if (bool == true)
+            if (bool)
                 scheduledTask = new ScheduledClassify(barr, img);
             time.schedule(scheduledTask, 3000, 3000);
-            while (bool == true) {
+            while (bool) {
                 Frame frame = null;
                 try {
                     frame = grabber.grabFrame();
@@ -121,17 +119,19 @@ public class Webcam extends VBox {
     }
 
     public static class ScheduledClassify extends TimerTask {
+
         private IplImage img;
         byte[] param;
         private float resultPercent;
         private String resultLabel;
-
+        private ImageDesc imageDesc;
 
         public ScheduledClassify(byte[] param, IplImage img) {
             this.param = param;
             this.resultLabel = "";
             this.resultPercent = 0.0f;
             this.img = img;
+            this.imageDesc = new ImageDesc();
         }
 
         public ArrayList<Object> fluxWebcam(byte[] modelByte) {
@@ -146,8 +146,10 @@ public class Webcam extends VBox {
             try (Tensor image = utils.byteBufferToTensor(modelByte)) {
                 System.out.println(graphDef);
                 String[] resProbability = null;
-                if (bool == true)
-                resProbability = ImageDesc.checkProbability(graphDef, image);
+
+                if (bool)
+                    resProbability = this.imageDesc.checkProbability(graphDef, image);
+
                 ArrayList<Object> result = new ArrayList<>();
 
                 result.add(resProbability[1]);

@@ -150,7 +150,7 @@ public class TensorFlowBuilder {
                     if(!this.userInputPercent.getText().matches("\\d+")) {
                         this.userInputPercent.setText("0");
                     }
-                    //String[] tabLabelsUser = userInputDescription.getText().split(" ");
+
                     String[] resultTab = startAnalysis(this.choosenImg.toString());
                     this.labelResult.setText(resultTab[0]);
                     System.out.println(resultTab[2]);
