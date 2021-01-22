@@ -37,7 +37,7 @@ public class ImageDesc {
      * @param probabilities
      * @return integer
      */
-    private int maxIndex(float[][] probabilities) {
+    public static int maxIndex(float[][] probabilities) {
         int best = 0;
         for (int i = 1; i < probabilities[0].length; ++i) {
             if (probabilities[0][i] > probabilities[0][best]) {
@@ -53,13 +53,13 @@ public class ImageDesc {
      * @param input
      * @return description of best match
      */
-    public String[] checkProbability(byte[] modelByte, Tensor input){
+    public static String[] checkProbability(byte[] modelByte, Tensor input){
         Tensor model = utils.executeModelFromByteArray(modelByte, input);
         float[][] probability = new float[1][(int) model.shape()[1]];
 
         model.copyTo(probability);
 
-        int bestLabelIdx = this.maxIndex(probability);
+        int bestLabelIdx = maxIndex(probability);
 
         System.out.printf("BEST MATCH: %s (%.2f%% likely)%n",
                 labels.get(bestLabelIdx),

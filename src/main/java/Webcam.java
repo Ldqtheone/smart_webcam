@@ -166,13 +166,15 @@ public class Webcam extends VBox {
         public void run() {
             if (param != null) {
                 ArrayList<Object> result = fluxWebcam(param);
-                Date date = new Date();
-                Instant instant = date.toInstant();
-                resultLabel = (String) result.get(0);
-                resultPercent = (float) result.get(1);
-                System.out.println(resultLabel);
-                System.out.println(instant);
-                cvSaveImage(PathFunctions.getPicturePath() + resultLabel + instant + ".jpg", img);
+                if (result != null) {
+                    Date date = new Date();
+                    Instant instant = date.toInstant();
+                    resultLabel = (String) result.get(0);
+                    resultPercent = (float) result.get(1);
+                    System.out.println(resultLabel);
+                    System.out.println(instant);
+                    cvSaveImage(PathFunctions.getPicturePath() + resultLabel + instant + ".jpg", img);
+                }
             }
         }
 
