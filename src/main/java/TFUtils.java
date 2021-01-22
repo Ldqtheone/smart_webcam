@@ -17,7 +17,7 @@ public class TFUtils {
     public static byte[] iplImageToByteArray(IplImage img) throws IOException {
         BufferedImage im = new Java2DFrameConverter().convert(new OpenCVFrameConverter.ToIplImage().convert(img));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] barr = null;
+        byte[] barr;
         try {
             ImageIO.write(im, "jpg", baos);
             baos.flush();

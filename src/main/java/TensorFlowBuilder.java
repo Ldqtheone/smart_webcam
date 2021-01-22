@@ -90,7 +90,7 @@ public class TensorFlowBuilder {
         this.openButton = new Button("Comparer une image...");
         this.openStampButton = new Button("Choisir un tampon...");
         this.submitButton = new Button("Lancer la comparaison");
-        this.webcamButton = new Button("Démarrer un webcam");
+        this.webcamButton = new Button("Demarrer la webcam");
         this.choiceFilter = new ChoiceBox(FXCollections.observableArrayList(
                 "Orange" , "Vert", "Bleu", "Rose", " Gris"
         ));
