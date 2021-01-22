@@ -84,10 +84,10 @@ public class Filters {
         ImageIO.write(combined, "PNG", new File(newPath));
     }
 
-    public static void stampFilter(String imgToFilter, int xUser, int yUser) throws FilterException, IOException{
+    public static void stampFilter(String imgToFilter, BufferedImage overlay, int xUser, int yUser) throws FilterException, IOException{
 
         BufferedImage image = ImageIO.read(new File(imgToFilter));
-        BufferedImage overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/stamp.png"));
+        //BufferedImage overlay = choosenStampp;
 
         // create the new image, canvas size is the max. of both image sizes
         int w = Math.max(image.getWidth(), overlay.getWidth());
