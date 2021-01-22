@@ -6,4 +6,5 @@ build/libs/smart_webcam-1.0-SNAPSHOT.jar
 .gradle/6.7/*
 build*
 *.jpg
+*.png
 *.log
