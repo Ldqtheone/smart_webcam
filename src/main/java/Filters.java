@@ -78,11 +78,15 @@ public class Filters {
         g.dispose();
 
         // Save as new image
+<<<<<<< Updated upstream
         System.out.println("1 : " + imgToFilter);
 
         String newPath = imgToFilter.replace(".jpg", "_frame.png");
 
         System.out.println("2 : " + newPath);
+=======
+        String newPath = imgToFilter.replace(".jpg", "_frame.png");
+>>>>>>> Stashed changes
 
         ImageIO.write(combined, "PNG", new File(newPath));
     }

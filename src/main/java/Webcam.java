@@ -185,7 +185,7 @@ public class Webcam extends VBox {
 
         @Override
         public void run() {
-            if (param != null) {
+            if (param != null && bool == true) {
                 ArrayList<Object> result = fluxWebcam(param);
                 Date date = new Date();
                 Instant instant = date.toInstant();

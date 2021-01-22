@@ -50,6 +50,10 @@ public class TensorFlowBuilder {
     private Button submitButton;
     private ChoiceBox choiceFilter;
     private Button frameFilter;
+<<<<<<< Updated upstream
+=======
+    private Button webcamButton;
+>>>>>>> Stashed changes
 
 
     public TensorFlowBuilder(Stage primaryStage){
@@ -196,6 +200,10 @@ public class TensorFlowBuilder {
         root.getChildren().add(this.frameFilter);
         root.getChildren().add(this.openButton);
         root.getChildren().add(this.submitButton);
+<<<<<<< Updated upstream
+=======
+        root.getChildren().add(this.webcamButton);
+>>>>>>> Stashed changes
         this.primaryStage.setScene(new Scene(root, 600, 600));
         this.primaryStage.show();
     }
