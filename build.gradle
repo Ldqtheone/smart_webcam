@@ -22,6 +22,10 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     compile 'org.tensorflow:tensorflow:1.15.0'
     implementation 'org.bytedeco:javacv-platform:1.5.4'
+ //   implementation 'org.bytedeco:javacv:1.5.4'
+   // implementation 'org.bytedeco:javacpp:1.5.4'
+    //implementation 'org.jrebirth.af.showcase:fxml:8.6.0'
+
 }
 
 test {
