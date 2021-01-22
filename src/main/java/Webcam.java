@@ -148,8 +148,8 @@ public class Webcam extends VBox {
                 System.out.println(graphDef);
                 String[] resProbability = null;
 
-                if (bool == true) {
-                    resProbability = ImageDesc.checkProbability(graphDef, image);
+                if (bool) {
+                    resProbability = this.imageDesc.checkProbability(graphDef, image);
                     ArrayList<Object> result = new ArrayList<>();
 
                     result.add(resProbability[1]);
