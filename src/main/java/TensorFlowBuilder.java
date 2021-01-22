@@ -291,6 +291,9 @@ public class TensorFlowBuilder {
     }
 
 
+    /**
+     * Start the program
+     */
     public void launchProgram(){
         this.createWindow();
     }

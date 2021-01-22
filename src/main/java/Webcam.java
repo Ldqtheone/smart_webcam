@@ -34,10 +34,18 @@ public class Webcam extends VBox {
     Java2DFrameConverter java2DFrameConverter = new Java2DFrameConverter();
     static boolean bool = true;
 
+    /**
+     * Exit windows
+     * @param event
+     */
     private void exitButtonOnAction(ActionEvent event){
         ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
     }
 
+    /**
+     * Class Webcam
+     * @throws FrameGrabber.Exception
+     */
     public Webcam() throws FrameGrabber.Exception {
         OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
         OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
@@ -115,6 +123,11 @@ public class Webcam extends VBox {
 
     }
 
+    /**
+     * Convert frame to Img
+     * @param frame
+     * @return
+     */
     private WritableImage frameToImage(Frame frame) {
         BufferedImage bufferedImage = java2DFrameConverter.getBufferedImage(frame);
         return SwingFXUtils.toFXImage(bufferedImage, null);
@@ -136,6 +149,11 @@ public class Webcam extends VBox {
             this.imageDesc = new ImageDesc();
         }
 
+        /**
+         * Get the webcam flux
+         * @param modelByte
+         * @return
+         */
         public ArrayList<Object> fluxWebcam(byte[] modelByte) {
             Path modelPath = PathFunctions.getLabelsPath();
             List<String> labels = ImageDesc.readAllLinesOrExit(modelPath);
@@ -165,7 +183,7 @@ public class Webcam extends VBox {
 
         @Override
         public void run() {
-            if (param != null && bool == true) {
+            if (param != null && bool) {
                 ArrayList<Object> result = fluxWebcam(param);
                 if (result != null) {
                     Date date = new Date();
