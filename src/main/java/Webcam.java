@@ -64,8 +64,9 @@ public class Webcam extends VBox {
             if (bool)
                 scheduledTask = new ScheduledClassify(barr, img);
             time.schedule(scheduledTask, 3000, 3000);
+            Frame frame = null;
+
             while (bool) {
-                Frame frame = null;
                 try {
                     grabber.start();
                     frame = grabber.grabFrame();
@@ -164,7 +165,7 @@ public class Webcam extends VBox {
 
         @Override
         public void run() {
-            if (param != null) {
+            if (param != null && bool == true) {
                 ArrayList<Object> result = fluxWebcam(param);
                 if (result != null) {
                     Date date = new Date();
