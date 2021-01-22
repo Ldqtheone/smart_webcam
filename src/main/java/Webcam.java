@@ -146,7 +146,7 @@ public class Webcam extends VBox {
             }
             try (Tensor image = utils.byteBufferToTensor(modelByte)) {
                 System.out.println(graphDef);
-                String[] resProbability = null;
+                String[] resProbability;
 
                 if (bool) {
                     resProbability = this.imageDesc.checkProbability(graphDef, image);
@@ -173,7 +173,7 @@ public class Webcam extends VBox {
                     resultPercent = (float) result.get(1);
                     System.out.println(resultLabel);
                     System.out.println(instant);
-                    cvSaveImage(PathFunctions.getPicturePath() + resultLabel + instant + ".jpg", img);
+                    cvSaveImage(PathFunctions.getPicturePath() + "/camera/" + resultLabel + instant + ".jpg", img);
                 }
             }
         }
