@@ -20,6 +20,7 @@ public class TensorFlowBuilder {
 
     private final Stage primaryStage;
     private File choosenImg = null;
+    private File choosenStamp = null;
 
     /**
      * Components
@@ -49,6 +50,7 @@ public class TensorFlowBuilder {
      * Buttons
      */
     private Button openButton;
+    private Button openStampButton;
     private Button submitButton;
     private ChoiceBox choiceFilter;
     private Button frameFilter;
@@ -86,6 +88,7 @@ public class TensorFlowBuilder {
         this.labelY = new Label("Y");
 
         this.openButton = new Button("Comparer une image...");
+        this.openStampButton = new Button("Choisir un tampon...");
         this.submitButton = new Button("Lancer la comparaison");
         this.webcamButton = new Button("Démarrer un webcam");
         this.choiceFilter = new ChoiceBox(FXCollections.observableArrayList(
@@ -148,7 +151,15 @@ public class TensorFlowBuilder {
                             if(!this.userInputY.getText().matches("\\d+")) {
                                 this.userInputY.setText("0");
                             }
-                            Filters.stampFilter(this.choosenImg.toString(), Integer.parseInt(this.userInputX.getText()), Integer.parseInt(this.userInputY.getText()));
+
+                            BufferedImage overlay;
+                            if(this.choosenStamp == null){
+                                overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/stamp.png"));
+                            }else {
+                                overlay = overlay = ImageIO.read(new File(this.choosenStamp.toString()));
+                            }
+
+                            Filters.stampFilter(this.choosenImg.toString(), overlay, Integer.parseInt(this.userInputX.getText()), Integer.parseInt(this.userInputY.getText()));
                             this.choosenImg = new File(this.choosenImg.toString().replace(".jpg", "_stamp.png"));
                             this.choosenImg = new File(this.choosenImg.toString().replace("_frame.png", "_stamp_frame.png"));
                         } catch (FilterException | IOException e) {
@@ -166,11 +177,18 @@ public class TensorFlowBuilder {
 
         //tamponFilter
 
-        /** J'ouvre le finder */
+        /** J'ouvre le finder pour choisir une image */
         this.openButton.setOnAction(
                 event -> {
                     this.choosenImg = fileImageChooser.createFileChooser().showSaveDialog(this.primaryStage);
                     this.imageView.setImage(new Image("file:\\"+this.choosenImg.toString()));
+                }
+        );
+
+        /** J'ouvre le finder popur choisir un tampon */
+        this.openStampButton.setOnAction(
+                event -> {
+                    this.choosenStamp = fileImageChooser.createFileChooser().showSaveDialog(this.primaryStage);
                 }
         );
 
@@ -257,6 +275,7 @@ public class TensorFlowBuilder {
         root.getChildren().add(this.openButton);
         root.getChildren().add(this.submitButton);
         root.getChildren().add(this.webcamButton);
+        root.getChildren().add(this.openStampButton);
         this.primaryStage.setScene(new Scene(root, 700, 600));
         this.primaryStage.show();
     }
