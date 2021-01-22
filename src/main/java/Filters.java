@@ -78,15 +78,16 @@ public class Filters {
         g.dispose();
 
         // Save as new image
-        String newPath = imgToFilter.replace(".jpg", "_frame.png");
+        String newPath = imgToFilter.replace(".jpg", ".png");
+        newPath = imgToFilter.replace(".png", "_frame.png");
 
         ImageIO.write(combined, "PNG", new File(newPath));
     }
 
-    public static void tamponFilter(String imgToFilter) throws FilterException, IOException{
+    public static void stampFilter(String imgToFilter, int xUser, int yUser) throws FilterException, IOException{
 
         BufferedImage image = ImageIO.read(new File(imgToFilter));
-        BufferedImage overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/cadreTransparent.png"));
+        BufferedImage overlay = ImageIO.read(new File(PathFunctions.getPicturePath().toString() + "/filters/stamp.png"));
 
         // create the new image, canvas size is the max. of both image sizes
         int w = Math.max(image.getWidth(), overlay.getWidth());
@@ -95,15 +96,17 @@ public class Filters {
 
         // paint both images, preserving the alpha channels
         Graphics g = combined.getGraphics();
-        g.drawImage(image, (overlay.getWidth() / 2) - (image.getWidth() / 2), (overlay.getHeight() / 2) - (image.getHeight() / 2), null);
-        g.drawImage(overlay, 0, 0, null);
+        g.drawImage(image, 0, 0, null);
+        g.drawImage(overlay, xUser, yUser, null); //Add the stamp at the wanted x and y
 
         g.dispose();
 
         // Save as new image
         System.out.println("1 : " + imgToFilter);
 
-        String newPath = imgToFilter.replace(".jpg", "_frame.png");
+        String newPath = imgToFilter.replace(".jpg", ".png");
+        newPath = imgToFilter.replace(".png", "_stamp.png");
+
 
         System.out.println("2 : " + newPath);
 

@@ -30,6 +30,8 @@ public class TensorFlowBuilder {
     private TextField userInputDescription;
     private TextField userInputFolder;
     private TextField userInputPercent;
+    private TextField userInputX;
+    private TextField userInputY;
 
     /**
      * Labels
@@ -40,6 +42,8 @@ public class TensorFlowBuilder {
     private Label labelPercent;
     private Label labelResult;
     private Label labelFilter;
+    private Label labelX;
+    private Label labelY;
 
     /**
      * Buttons
@@ -48,6 +52,7 @@ public class TensorFlowBuilder {
     private Button submitButton;
     private ChoiceBox choiceFilter;
     private Button frameFilter;
+    private Button stampFilter;
     private Button webcamButton;
 
 
@@ -68,6 +73,8 @@ public class TensorFlowBuilder {
         this.userInputDescription = new TextField(); //Text field for wanted description
         this.userInputFolder = new TextField(); //Text field for destination folder
         this.userInputPercent = new TextField(); //Text field for user input
+        this.userInputX = new TextField(); //Text field for wanted x for stamp
+        this.userInputY = new TextField(); //Text field for wanted y for stamp
 
         this.labelInputImg = new Label("Image name");
         this.labelDescription = new Label("Wanted description");
@@ -75,6 +82,8 @@ public class TensorFlowBuilder {
         this.labelPercent = new Label("Wanted percentage");
         this.labelResult = new Label("No result"); //Label for the futur result
         this.labelFilter = new Label("Select a filter");
+        this.labelX = new Label("X");
+        this.labelY = new Label("Y");
 
         this.openButton = new Button("Comparer une image...");
         this.submitButton = new Button("Lancer la comparaison");
@@ -83,6 +92,8 @@ public class TensorFlowBuilder {
                 "Orange" , "Vert", "Bleu", "Rose", " Gris"
         ));
         this.frameFilter = new Button("Ajouter un cadre");
+        this.stampFilter = new Button("Ajouter un tampon");
+
 
         this.imageView = new ImageView(); //Image for render
 
@@ -122,6 +133,31 @@ public class TensorFlowBuilder {
                 }
         );
 
+        /** J'appuie sur le choix du tampon */
+        this.stampFilter.setOnAction(
+                event -> {
+                    if(this.choosenImg != null) {
+                        try {
+                            if(!this.userInputX.getText().matches("\\d+")) {
+                                this.userInputX.setText("0");
+                            }
+                            if(!this.userInputY.getText().matches("\\d+")) {
+                                this.userInputY.setText("0");
+                            }
+                            Filters.stampFilter(this.choosenImg.toString(), Integer.parseInt(this.userInputX.getText()), Integer.parseInt(this.userInputY.getText()));
+                            this.choosenImg = new File(this.choosenImg.toString().replace(".jpg", "_stamp.png"));
+                        } catch (FilterException | IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else{
+                        System.out.println("Aucune image n'a été séléctionnée");
+                    }
+                }
+        );
+
+        //tamponFilter
+
         /** J'ouvre le finder */
         this.openButton.setOnAction(
                 event -> {
@@ -150,7 +186,7 @@ public class TensorFlowBuilder {
                     if(!this.userInputPercent.getText().matches("\\d+")) {
                         this.userInputPercent.setText("0");
                     }
-                    //String[] tabLabelsUser = userInputDescription.getText().split(" ");
+
                     String[] resultTab = startAnalysis(this.choosenImg.toString());
                     this.labelResult.setText(resultTab[0]);
                     System.out.println(resultTab[2]);
@@ -198,15 +234,20 @@ public class TensorFlowBuilder {
         root.getChildren().add(this.userInputPercent);
         root.getChildren().add(this.labelFolder);
         root.getChildren().add(this.userInputFolder);
+        root.getChildren().add(this.labelX);
+        root.getChildren().add(this.userInputX);
+        root.getChildren().add(this.labelY);
+        root.getChildren().add(this.userInputY);
         root.getChildren().add(this.labelResult);
         root.getChildren().add(this.imageView);
         root.getChildren().add(this.labelFilter);
         root.getChildren().add(this.choiceFilter);
         root.getChildren().add(this.frameFilter);
+        root.getChildren().add(this.stampFilter);
         root.getChildren().add(this.openButton);
         root.getChildren().add(this.submitButton);
         root.getChildren().add(this.webcamButton);
-        this.primaryStage.setScene(new Scene(root, 600, 600));
+        this.primaryStage.setScene(new Scene(root, 700, 600));
         this.primaryStage.show();
     }
 
